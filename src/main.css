@@ -1,0 +1,56 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+body {
+    margin: 0;
+}
+
+#fullContainer {
+    overflow: scroll;
+    overflow-x: auto;
+    width: auto;
+    height: 100vh;
+}
+
+#pivotTableContainer {
+    background-color: white;
+    width: auto;
+}
+
+#pivotTableContainer, tr, td, th {
+    border-collapse: collapse;
+}
+
+#pivotTableContainer tbody tr:nth-child(odd) {
+    background-color: #f1f1f1;
+}
+
+#pivotTableContainer tbody tr:hover {
+    border-bottom: 0.2px solid black;
+}
+
+#pivotTableContainer thead {
+    color: #4f4f4f;
+}
+
+#pivotTableContainer .category {
+    background-color: white;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.category, .subcategory {
+    text-align: left;
+    min-width: 200px;
+}
+
+.subcategory {
+    border-right: 1px solid rgb(216, 216, 216);
+}
+
+.value {
+    text-align: right;
+    min-width: 100px;
+}
