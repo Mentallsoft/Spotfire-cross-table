@@ -9,7 +9,7 @@ body {
 }
 
 #fullContainer {
-    overflow: scroll;
+    overflow-y: auto;
     overflow-x: auto;
     width: auto;
     height: 100vh;
@@ -17,11 +17,16 @@ body {
 
 #pivotTableContainer {
     background-color: white;
-    width: auto;
+    width: 100%;
 }
 
 #pivotTableContainer, tr, td, th {
     border-collapse: collapse;
+}
+
+th {
+    resize: horizontal;
+    overflow: auto;
 }
 
 #pivotTableContainer tbody tr:nth-child(odd) {
@@ -29,7 +34,12 @@ body {
 }
 
 #pivotTableContainer tbody tr:hover {
-    border-bottom: 0.2px solid black;
+    background-color: #71567A;
+    color: white;
+}
+
+#pivotTableContainer tbody tr .category{
+    color: #4f4f4f;
 }
 
 #pivotTableContainer thead {
@@ -44,6 +54,8 @@ body {
 .category, .subcategory {
     text-align: left;
     min-width: 200px;
+    max-width: 220px;
+    width: 200px;
 }
 
 .subcategory {
