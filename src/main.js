@@ -94,10 +94,14 @@ Spotfire.initialize(async (mod) => {
 
         // --- Order data json
         data.sort(function (a, b) {
-            //return a.category.localeCompare(b.category);
+
+            let valueA, valueB;
+            a.subcategory == 'Ending Balance'? valueA = "0" + a.subcategory: valueA = a.subcategory;
+            b.subcategory == 'Ending Balance'? valueB = "0" + b.subcategory: valueB = b.subcategory;
+
             return cmp(
-                [cmp(a.category, b.category), cmp(a.subcategory, b.subcategory)],
-                [cmp(b.category, a.category), cmp(b.subcategory, a.subcategory)]
+                [cmp(a.category, b.category), cmp(valueA, valueB)],
+                [cmp(b.category, a.category), cmp(valueB, valueA)]
             );
         });
 

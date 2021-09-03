@@ -2,7 +2,7 @@
     "apiVersion": "1.2",
     "version": "1.0",
     "name": "Bamboo Cross Table",
-    "id": "js-dev-starter",
+    "id": "js-cross-table",
     "icon": "icon.svg",
     "properties": [
         {
