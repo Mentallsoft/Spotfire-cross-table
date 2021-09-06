@@ -69,7 +69,6 @@ Spotfire.initialize(async (mod) => {
             rows.forEach(function (row) {
                 let stop = {
                     category: row.categorical("column1").formattedValue(),
-                    subcategory: row.categorical("column2").formattedValue(),
                     pivotcolumn: row.categorical("pivotColumn").formattedValue(),
                     formatColumn: row.categorical("formatColumn").formattedValue(),
                     value: row.continuous("value").value()
@@ -130,6 +129,85 @@ Spotfire.initialize(async (mod) => {
             var newThead = document.createElement("thead");
             var newTbody = document.createElement("tbody");
 
+            // --- Encontramos los valores de las categoría para futura combinación de filas
+            var categories = []
+            var auxCounter1 = 0
+
+            Data.forEach(
+                n => {
+                    if (auxCounter1 > 0) {
+                        categories.includes(n[0]) ? null : categories.push(n[0])
+                    }
+                    auxCounter1++;
+                }
+            )
+
+            // --- Completamos el resto de la tabla
+            let counterContent = 0;
+            var uniqueCategory = []
+            let numberColumnsCategory;
+
+            Data.forEach(pD => {
+                counterContent++;
+                if (counterContent > 1) {
+                    let newBodyTr = document.createElement("tr");
+
+                    for (var i = 0; i < pD.length; i++) {
+                        let separados = pD[0].split('»')
+                        let category = separados[0]
+                        let subCategory = separados[1]
+                        numberColumnsCategory = separados.length - 1
+                        let formatCharacter = separados[numberColumnsCategory].split('-').map(Function.prototype.call, String.prototype.trim)
+
+                        if (i === 0) {
+
+                            if (!uniqueCategory.includes(category)) {
+                                uniqueCategory.push(category)
+
+                                let newTd = document.createElement("td");
+                                newTd.setAttribute('rowSpan', `${categories.filter(
+                                    cat => {
+                                        let auxCat = cat.split('»')
+                                        return category === auxCat[0]
+                                    }
+                                ).length}`);
+
+                                newTd.setAttribute('class', 'category')
+                                newTd.append(document.createTextNode(category));
+                                newBodyTr.appendChild(newTd);
+                            }
+                            if (separados.length > 2) {
+                                let newTd2 = document.createElement("td");
+                                newTd2.setAttribute('class', 'subcategory')
+                                newTd2.append(document.createTextNode(subCategory));
+                                newBodyTr.appendChild(newTd2);
+                            }
+                        }
+                        else {
+                            const options = { style: formatCharacter[0], currency: 'USD', minimumFractionDigits: formatCharacter[1], maximumFractionDigits: formatCharacter[1] };
+                            const numberFormat = new Intl.NumberFormat('en-EN', options);
+                            const formatValue = numberFormat.format(pD[i])
+                            const value = formatValue.includes("NaN") ? "-" : formatValue
+
+                            let newTd = document.createElement("td");
+                            if (featuredColumns.includes(Data[0][i])) {
+                                newTd.setAttribute('class', 'value featured')
+                            }
+                            else {
+                                newTd.setAttribute('class', 'value')
+                            }
+                            newTd.append(document.createTextNode(
+                                value
+                            ))
+                            newBodyTr.appendChild(newTd)
+                        }
+
+                    }
+                    newTbody.appendChild(newBodyTr);
+                }
+            }
+            );
+
             // --- Construímos el cabecero de la tabla
             var counterHeader = 0;
             Data.every(
@@ -138,19 +216,20 @@ Spotfire.initialize(async (mod) => {
                     if (counterHeader === 1) {
                         let newTr = document.createElement("tr");
                         for (var i = 0; i < pD.length; i++) {
-                            let newTh = document.createElement("th");
-
                             if (i === 0) {
-                                newTh.append(document.createTextNode("Category"))
-                                newTh.setAttribute('class', 'category')
-                                newTr.appendChild(newTh)
-
-                                let auxNewTh = document.createElement("th");
-                                auxNewTh.append(document.createTextNode("Subcategory"))
-                                auxNewTh.setAttribute('class', 'subcategory')
-                                newTr.appendChild(auxNewTh)
+                                for (var auxI = 0; auxI < numberColumnsCategory; auxI++) {
+                                    let newTh = document.createElement("th");
+                                    newTh.append(document.createTextNode(
+                                        auxI === 0 ? "Category" : `Subcategory`
+                                    ))
+                                    newTh.setAttribute('class',
+                                        auxI === 0 ? "category" : `ubcategory`
+                                    )
+                                    newTr.appendChild(newTh)
+                                }
                             }
                             else {
+                                let newTh = document.createElement("th");
                                 newTh.append(document.createTextNode(pD[i]))
                                 newTh.setAttribute('class', 'value')
                                 newTr.appendChild(newTh)
@@ -168,85 +247,6 @@ Spotfire.initialize(async (mod) => {
                 }
             )
 
-            // --- Encontramos los valores de las categoría para futura combinación de filas
-            var categories = []
-            var auxCounter1 = 0
-
-            Data.forEach(
-                n => {
-                    if (auxCounter1 > 0) {
-                        categories.includes(n[0]) ? null : categories.push(n[0])
-                    }
-                    auxCounter1++;
-                }
-            )
-
-            // --- Completamos el resto de la tabla
-            let counterContent = 0;
-            var uniqueCategory = []
-
-            Data.forEach(pD => {
-
-                counterContent++;
-                if (counterContent > 1) {
-                    let newBodyTr = document.createElement("tr");
-
-                    for (var i = 0; i < pD.length; i++) {
-                        let separados = pD[0].split('|');
-                        let category = separados[0]
-                        let subCategory = separados[1]
-                        let formatCharacter = separados[2].split('-')
-
-                        if (i === 0) {
-
-                            if (!uniqueCategory.includes(category)) {
-
-                                uniqueCategory.push(category)
-
-                                let newTd = document.createElement("td");
-                                newTd.setAttribute('rowSpan', `${categories.filter(
-                                    cat => {
-                                        let auxCat = cat.split('|')
-                                        return category === auxCat[0]
-                                    }
-                                ).length}`);
-
-                                newTd.setAttribute('class', 'category')
-                                newTd.append(document.createTextNode(category));
-                                newBodyTr.appendChild(newTd);
-                            }
-
-                            let newTd2 = document.createElement("td");
-                            newTd2.setAttribute('class', 'subcategory')
-                            newTd2.append(document.createTextNode(subCategory));
-                            newBodyTr.appendChild(newTd2);
-                        }
-                        else {
-                            const options = { style: formatCharacter[0], currency: 'USD', minimumFractionDigits: formatCharacter[1],  maximumFractionDigits: formatCharacter[1]};
-                            const numberFormat = new Intl.NumberFormat('en-EN', options);
-                            const formatValue = numberFormat.format(pD[i])
-                            const value = formatValue.includes("NaN") ? "-" : formatValue
-
-                            let newTd = document.createElement("td");
-                            if (featuredColumns.includes(Data[0][i])) {
-                                newTd.setAttribute('class', 'value featured')
-
-                            }
-                            else {
-                                newTd.setAttribute('class', 'value')
-                            }
-                            newTd.append(document.createTextNode(
-                                value
-                            ))
-                            newBodyTr.appendChild(newTd)
-                        }
-
-                    }
-                    newTbody.appendChild(newBodyTr);
-                }
-            }
-            );
-
             pivotTable.appendChild(newTbody);
         }
 
@@ -260,22 +260,29 @@ Spotfire.initialize(async (mod) => {
 
         // --- Order data json
         data.sort(function (a, b) {
+            let separadosA = a.category.split('»')
+            let categoryA = separadosA[0].trim()
+            let subcategoryA = separadosA[separadosA.length-1].trim()
+
+            let separadosB = b.category.split('»')
+            let categoryB = separadosB[0].trim()
+            let subcategoryB = separadosB[separadosB.length-1].trim()
 
             let valueA, valueB;
-            if (CustomSortValues.includes(a.subcategory)) {
-                valueA = CustomSortValues.indexOf(a.subcategory) + a.subcategory
+            if (CustomSortValues.includes(subcategoryA)) {
+                valueA = CustomSortValues.indexOf(subcategoryA) + subcategoryA
             }
-            else if (CustomSortValues.includes(b.subcategory)) {
-                valueB = CustomSortValues.indexOf(b.subcategory) + b.subcategory
+            else if (CustomSortValues.includes(subcategoryB)) {
+                valueB = CustomSortValues.indexOf(subcategoryB) + subcategoryB
             }
             else {
-                valueA = a.subcategory
-                valueB = b.subcategory
+                valueA = subcategoryA
+                valueB = subcategoryB
             }
 
             return cmp(
-                [cmp(a.category, b.category), cmp(valueA, valueB)],
-                [cmp(b.category, a.category), cmp(valueB, valueA)]
+                [cmp(categoryA, categoryB), cmp(valueA, valueB)],
+                [cmp(categoryB, categoryA), cmp(valueB, valueA)]
             );
         });
 
@@ -283,7 +290,7 @@ Spotfire.initialize(async (mod) => {
         const customdata = []
         data.forEach(
             data => {
-                customdata.push({ "customKey": `${data.category}|${data.subcategory}|${data.formatColumn}`, "pivotcolumn": data.pivotcolumn, "value": data.value })
+                customdata.push({ "customKey": `${data.category} » ${data.formatColumn}`, "pivotcolumn": data.pivotcolumn, "value": data.value })
             }
         )
 

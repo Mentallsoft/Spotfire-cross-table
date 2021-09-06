@@ -13,11 +13,6 @@
                 "placement": "left"
             },
             {
-                "name": "column2",
-                "mode": "categorical",
-                "placement": "left"
-            },
-            {
                 "name": "pivotColumn",
                 "mode": "categorical",
                 "placement": "left"

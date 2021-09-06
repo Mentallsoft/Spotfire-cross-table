@@ -72,11 +72,11 @@ th::-webkit-resizer{
 .subcategory {
     text-align: left;
     min-width: 200px;
-    max-width: 220px;
     width: 200px;
 }
 
 .subcategory {
+    min-width: 350px;
     border-right: 1px solid rgb(216, 216, 216);
 }
 
