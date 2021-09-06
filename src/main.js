@@ -14,7 +14,10 @@ Spotfire.initialize(async (mod) => {
     /**
      * Create the read function.
      */
-    const reader = mod.createReader(mod.visualization.data(), mod.windowSize(), mod.property("myProperty"));
+    const reader = mod.createReader(
+        mod.visualization.data(),
+        mod.windowSize()
+    );
 
     /**
      * Store the context.
@@ -37,10 +40,10 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.Size} windowSize
-     * @param {Spotfire.ModProperty<string>} prop
+     * param {Spotfire.Size} windowSize
+     * param {Spotfire.ModProperty<string>} prop
      */
-    async function render(dataView, windowSize, prop) {
+    async function render(dataView) {
         /**
          * Check the data view for errors
          */
@@ -77,15 +80,14 @@ Spotfire.initialize(async (mod) => {
 
                 data.push(stop);
             });
-
-            // Sort by stopSequence
-            let sortProp = 'value';
-            data.sort(function (a, b) { return a[sortProp] - b[sortProp] });
         }
 
         // Process rows to objects
         processRows();
         //------------------------------------------------------------------
+
+        const featuredColumns = ['Forecast']
+        const CustomSortValues = ['Ending Balance']
 
         // generic comparison function
         const cmp = function (x, y) {
@@ -96,8 +98,16 @@ Spotfire.initialize(async (mod) => {
         data.sort(function (a, b) {
 
             let valueA, valueB;
-            a.subcategory == 'Ending Balance'? valueA = "0" + a.subcategory: valueA = a.subcategory;
-            b.subcategory == 'Ending Balance'? valueB = "0" + b.subcategory: valueB = b.subcategory;
+            if (CustomSortValues.includes(a.subcategory)) {
+                valueA = CustomSortValues.indexOf(a.subcategory) + a.subcategory
+            }
+            else if (CustomSortValues.includes(b.subcategory)) {
+                valueB = CustomSortValues.indexOf(b.subcategory) + b.subcategory
+            }
+            else {
+                valueA = a.subcategory
+                valueB = b.subcategory
+            }
 
             return cmp(
                 [cmp(a.category, b.category), cmp(valueA, valueB)],
@@ -113,8 +123,6 @@ Spotfire.initialize(async (mod) => {
                 customdata.push({ "customKey": `${data.category}|${data.subcategory}`, "pivotcolumn": data.pivotcolumn, "value": data.value })
             }
         )
-
-        const featuredColumns = ['Forecast']
 
         // --- Pivoteamos los datos basado en la "pivot column"
         let pivotData = getPivotArray(customdata, "customKey", "pivotcolumn", "value", "");
@@ -210,8 +218,6 @@ Spotfire.initialize(async (mod) => {
             // --- Encontramos los valores de las categoría para futura combinación de filas
             var categories = []
             var auxCounter1 = 0
-            
-            console.log(Data[0][1]);
 
             Data.forEach(
                 n => {
@@ -268,13 +274,12 @@ Spotfire.initialize(async (mod) => {
                             const value = numberFormat.format(pD[i]) === "$NaN" ? "-" : numberFormat.format(pD[i])
 
                             let newTd = document.createElement("td");
-                            
-                            //if(Data[0][i]==="Forecast"){
-                            if(featuredColumns.includes(Data[0][i])){
+
+                            if (featuredColumns.includes(Data[0][i])) {
                                 newTd.setAttribute('class', 'value featured')
 
                             }
-                            else{
+                            else {
                                 newTd.setAttribute('class', 'value')
                             }
                             newTd.append(document.createTextNode(
