@@ -18,7 +18,12 @@
                 "placement": "left"
             },
             {
-                "name": "column3",
+                "name": "pivotColumn",
+                "mode": "categorical",
+                "placement": "left"
+            },
+            {
+                "name": "formatColumn",
                 "mode": "categorical",
                 "placement": "left"
             },

@@ -27,11 +27,7 @@ Spotfire.initialize(async (mod) => {
     // ------------------------------------------------------------------
     // SPOTFIRE DEFINITIONS
     let rows = null;
-
-    // VIZ DATA AND CONFIG
     let data = [];
-
-    // ------------------------------------------------------------------
 
     /**
      * Initiate the read loop
@@ -74,7 +70,8 @@ Spotfire.initialize(async (mod) => {
                 let stop = {
                     category: row.categorical("column1").formattedValue(),
                     subcategory: row.categorical("column2").formattedValue(),
-                    pivotcolumn: row.categorical("column3").formattedValue(),
+                    pivotcolumn: row.categorical("pivotColumn").formattedValue(),
+                    formatColumn: row.categorical("formatColumn").formattedValue(),
                     value: row.continuous("value").value()
                 }
 
@@ -86,51 +83,7 @@ Spotfire.initialize(async (mod) => {
         processRows();
         //------------------------------------------------------------------
 
-        const featuredColumns = ['Forecast']
-        const CustomSortValues = ['Ending Balance']
-
-        // generic comparison function
-        const cmp = function (x, y) {
-            return x > y ? 1 : x < y ? -1 : 0;
-        };
-
-        // --- Order data json
-        data.sort(function (a, b) {
-
-            let valueA, valueB;
-            if (CustomSortValues.includes(a.subcategory)) {
-                valueA = CustomSortValues.indexOf(a.subcategory) + a.subcategory
-            }
-            else if (CustomSortValues.includes(b.subcategory)) {
-                valueB = CustomSortValues.indexOf(b.subcategory) + b.subcategory
-            }
-            else {
-                valueA = a.subcategory
-                valueB = b.subcategory
-            }
-
-            return cmp(
-                [cmp(a.category, b.category), cmp(valueA, valueB)],
-                [cmp(b.category, a.category), cmp(valueB, valueA)]
-            );
-        });
-
-        // --- Se construye una llave unica para segmentar la infomación
-        const customdata = []
-
-        data.forEach(
-            data => {
-                customdata.push({ "customKey": `${data.category}|${data.subcategory}`, "pivotcolumn": data.pivotcolumn, "value": data.value })
-            }
-        )
-
-        // --- Pivoteamos los datos basado en la "pivot column"
-        let pivotData = getPivotArray(customdata, "customKey", "pivotcolumn", "value", "");
-
-        // --- Se construye tabla
-        buildPivotTable("#pivotTableContainer", pivotData);
-
-
+        //Metodo para pivotear archivos JSON
         function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, titlePivot) {
 
             var result = {}, ret = [];
@@ -169,7 +122,7 @@ Spotfire.initialize(async (mod) => {
             return ret;
         }
 
-        //Obtenemos contenido HTML para construir la nueva tabla
+        //Metodo para constuir contenido HTML
         function buildPivotTable(tableContainer, Data) {
             const pivotTable = document.querySelector(tableContainer);
             pivotTable.innerHTML = ''
@@ -240,8 +193,9 @@ Spotfire.initialize(async (mod) => {
 
                     for (var i = 0; i < pD.length; i++) {
                         let separados = pD[0].split('|');
-                        let category = separados[i]
-                        let subCategory = separados[i + 1]
+                        let category = separados[0]
+                        let subCategory = separados[1]
+                        let formatCharacter = separados[2].split('-')
 
                         if (i === 0) {
 
@@ -268,13 +222,12 @@ Spotfire.initialize(async (mod) => {
                             newBodyTr.appendChild(newTd2);
                         }
                         else {
-
-                            const options = { style: 'currency', currency: 'USD', maximumFractionDigits: 0 };
+                            const options = { style: formatCharacter[0], currency: 'USD', minimumFractionDigits: formatCharacter[1],  maximumFractionDigits: formatCharacter[1]};
                             const numberFormat = new Intl.NumberFormat('en-EN', options);
-                            const value = numberFormat.format(pD[i]) === "$NaN" ? "-" : numberFormat.format(pD[i])
+                            const formatValue = numberFormat.format(pD[i])
+                            const value = formatValue.includes("NaN") ? "-" : formatValue
 
                             let newTd = document.createElement("td");
-
                             if (featuredColumns.includes(Data[0][i])) {
                                 newTd.setAttribute('class', 'value featured')
 
@@ -296,6 +249,50 @@ Spotfire.initialize(async (mod) => {
 
             pivotTable.appendChild(newTbody);
         }
+
+        const featuredColumns = ['Forecast']
+        const CustomSortValues = ['Ending Balance']
+
+        // generic comparison function
+        const cmp = function (x, y) {
+            return x > y ? 1 : x < y ? -1 : 0;
+        };
+
+        // --- Order data json
+        data.sort(function (a, b) {
+
+            let valueA, valueB;
+            if (CustomSortValues.includes(a.subcategory)) {
+                valueA = CustomSortValues.indexOf(a.subcategory) + a.subcategory
+            }
+            else if (CustomSortValues.includes(b.subcategory)) {
+                valueB = CustomSortValues.indexOf(b.subcategory) + b.subcategory
+            }
+            else {
+                valueA = a.subcategory
+                valueB = b.subcategory
+            }
+
+            return cmp(
+                [cmp(a.category, b.category), cmp(valueA, valueB)],
+                [cmp(b.category, a.category), cmp(valueB, valueA)]
+            );
+        });
+
+        // --- Se construye una llave unica para segmentar la infomación
+        const customdata = []
+        data.forEach(
+            data => {
+                customdata.push({ "customKey": `${data.category}|${data.subcategory}|${data.formatColumn}`, "pivotcolumn": data.pivotcolumn, "value": data.value })
+            }
+        )
+
+        // --- Pivoteamos los datos basado en la "pivot column"
+        let pivotData = getPivotArray(customdata, "customKey", "pivotcolumn", "value", "");
+
+        // --- Se construye tabla
+        buildPivotTable("#pivotTableContainer", pivotData);
+
         /**
          * Signal that the mod is ready for export.
          */
