@@ -114,6 +114,8 @@ Spotfire.initialize(async (mod) => {
             }
         )
 
+        const featuredColumns = ['Forecast']
+
         // --- Pivoteamos los datos basado en la "pivot column"
         let pivotData = getPivotArray(customdata, "customKey", "pivotcolumn", "value", "");
 
@@ -179,7 +181,7 @@ Spotfire.initialize(async (mod) => {
 
                             if (i === 0) {
                                 newTh.append(document.createTextNode("Category"))
-                                newTh.setAttribute('class', 'subcategory')
+                                newTh.setAttribute('class', 'category')
                                 newTr.appendChild(newTh)
 
                                 let auxNewTh = document.createElement("th");
@@ -208,6 +210,8 @@ Spotfire.initialize(async (mod) => {
             // --- Encontramos los valores de las categoría para futura combinación de filas
             var categories = []
             var auxCounter1 = 0
+            
+            console.log(Data[0][1]);
 
             Data.forEach(
                 n => {
@@ -264,7 +268,15 @@ Spotfire.initialize(async (mod) => {
                             const value = numberFormat.format(pD[i]) === "$NaN" ? "-" : numberFormat.format(pD[i])
 
                             let newTd = document.createElement("td");
-                            newTd.setAttribute('class', 'value')
+                            
+                            //if(Data[0][i]==="Forecast"){
+                            if(featuredColumns.includes(Data[0][i])){
+                                newTd.setAttribute('class', 'value featured')
+
+                            }
+                            else{
+                                newTd.setAttribute('class', 'value')
+                            }
                             newTd.append(document.createTextNode(
                                 value
                             ))

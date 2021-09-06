@@ -20,7 +20,10 @@ body {
     width: 100%;
 }
 
-#pivotTableContainer, tr, td, th {
+#pivotTableContainer, 
+tr, 
+td, 
+th {
     border-collapse: collapse;
 }
 
@@ -37,8 +40,13 @@ th::-webkit-resizer{
     background-color: #f1f1f1;
 }
 
-#pivotTableContainer tbody tr:hover {
-    background-color: #71567A;
+#pivotTableContainer tbody tr .featured{
+    background-color: #E2E3EF;
+}
+
+#pivotTableContainer tbody tr:hover, 
+#pivotTableContainer tbody tr:hover .featured{
+    background-color: #848DA7 !important;
     color: white;
 }
 
@@ -48,6 +56,11 @@ th::-webkit-resizer{
 
 #pivotTableContainer thead {
     color: #4f4f4f;
+    font-size: 11pt;
+}
+
+#pivotTableContainer tbody {
+    font-size: 10pt;
 }
 
 #pivotTableContainer .category {
@@ -55,7 +68,8 @@ th::-webkit-resizer{
     border-bottom: 1px solid whitesmoke;
 }
 
-.category, .subcategory {
+.category, 
+.subcategory {
     text-align: left;
     min-width: 200px;
     max-width: 220px;
