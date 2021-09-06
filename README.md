@@ -15,3 +15,16 @@ These instructions assume that you have [Node.js](https://nodejs.org/en/) (which
 
 ## Working without a development server
 - In Spotfire, follow the steps of creating a new mod and then browse for, and point to, the _manifest_ in the `src` folder.
+
+## To use correctly this visualization:
+
+### Create a column with format
+- You can use this code to build this column:
+
+# case  
+# WHEN Lower([Subcategory])='ending balance' THEN "currency-2" 
+# WHEN Lower([Subcategory])='disposals' THEN "percent-1"
+# ELSE "decimal-0"
+# END
+
+- (format value)-(digits fraction)
