@@ -4,6 +4,8 @@
 * in the license file that is distributed with this file.
 */
 
+/* Scroll styling */
+
 body {
     margin: 0;
 }
@@ -86,4 +88,9 @@ th::-webkit-resizer{
 .value {
     text-align: right;
     min-width: 100px;
+}
+
+td, th{
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
