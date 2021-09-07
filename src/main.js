@@ -262,23 +262,16 @@ Spotfire.initialize(async (mod) => {
         data.sort(function (a, b) {
             let separadosA = a.category.split('»')
             let categoryA = separadosA[0].trim()
-            let subcategoryA = separadosA[separadosA.length-1].trim()
+            let subcategoryA = separadosA[separadosA.length - 1].trim()
 
             let separadosB = b.category.split('»')
             let categoryB = separadosB[0].trim()
-            let subcategoryB = separadosB[separadosB.length-1].trim()
+            let subcategoryB = separadosB[separadosB.length - 1].trim()
 
             let valueA, valueB;
-            if (CustomSortValues.includes(subcategoryA)) {
-                valueA = CustomSortValues.indexOf(subcategoryA) + subcategoryA
-            }
-            else if (CustomSortValues.includes(subcategoryB)) {
-                valueB = CustomSortValues.indexOf(subcategoryB) + subcategoryB
-            }
-            else {
-                valueA = subcategoryA
-                valueB = subcategoryB
-            }
+
+            valueA = CustomSortValues.includes(subcategoryA)? CustomSortValues.indexOf(subcategoryA) + subcategoryA: subcategoryA
+            valueB = CustomSortValues.includes(subcategoryB)? CustomSortValues.indexOf(subcategoryB) + subcategoryB: subcategoryB
 
             return cmp(
                 [cmp(categoryA, categoryB), cmp(valueA, valueB)],
