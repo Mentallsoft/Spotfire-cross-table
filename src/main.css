@@ -17,6 +17,7 @@ body {
 
 #pivotTableContainer {
     background-color: white;
+    color: #4f4f4f;
     width: 100%;
 }
 
@@ -51,11 +52,11 @@ th::-webkit-resizer{
 }
 
 #pivotTableContainer tbody tr .category{
-    color: #4f4f4f;
+    color: #735679;
+    font-weight: Bold;
 }
 
 #pivotTableContainer thead {
-    color: #4f4f4f;
     font-size: 11pt;
 }
 
@@ -71,8 +72,10 @@ th::-webkit-resizer{
 .category, 
 .subcategory {
     text-align: left;
+}
+
+.category{
     min-width: 200px;
-    width: 200px;
 }
 
 .subcategory {
