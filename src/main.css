@@ -20,7 +20,7 @@ body {
 #pivotTableContainer {
     background-color: white;
     color: #4f4f4f;
-    width: 100%;
+    width: auto;
 }
 
 #pivotTableContainer, 
@@ -30,14 +30,14 @@ th {
     border-collapse: collapse;
 }
 
-th {
+/* th {
     resize: horizontal;
     overflow: auto;
 }
 
 th::-webkit-resizer{
     color: transparent;
-}
+} */
 
 #pivotTableContainer tbody tr:nth-child(odd) {
     background-color: #f1f1f1;
@@ -48,7 +48,8 @@ th::-webkit-resizer{
 }
 
 #pivotTableContainer tbody tr:hover, 
-#pivotTableContainer tbody tr:hover .featured{
+#pivotTableContainer tbody tr:hover .featured,
+#pivotTableContainer tbody tr:hover .subcategory{
     background-color: #848DA7 !important;
     color: white;
 }
@@ -78,6 +79,7 @@ th::-webkit-resizer{
 
 .category{
     min-width: 200px;
+    background-color: red;
 }
 
 .subcategory {
@@ -87,7 +89,7 @@ th::-webkit-resizer{
 
 .value {
     text-align: right;
-    min-width: 100px;
+    min-width: 200px;
 }
 
 td, th{
