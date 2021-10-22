@@ -158,6 +158,7 @@ Spotfire.initialize(async (mod) => {
                         let subCategory = separados[1]
                         numberColumnsCategory = separados.length - 1
                         let formatCharacter = separados[numberColumnsCategory].split('-').map(Function.prototype.call, String.prototype.trim)
+                        numberFixedColumns= numberColumnsCategory;
 
                         if (i === 0) {
 
@@ -223,7 +224,7 @@ Spotfire.initialize(async (mod) => {
                                         auxI === 0 ? "Category" : `Subcategory`
                                     ))
                                     newTh.setAttribute('class',
-                                        auxI === 0 ? "category" : `ubcategory`
+                                        auxI === 0 ? "category" : `subcategory`
                                     )
                                     newTr.appendChild(newTh)
                                 }
@@ -289,10 +290,14 @@ Spotfire.initialize(async (mod) => {
 
         // --- Pivoteamos los datos basado en la "pivot column"
         let pivotData = getPivotArray(customdata, "customKey", "pivotcolumn", "value", "");
+        var numberFixedColumns;
 
         // --- Se construye tabla
         buildPivotTable("#pivotTableContainer", pivotData);
 
+        // --- line for fixed headers and columns
+        $("#pivotTableContainer").tableHeadFixer({'left' : numberFixedColumns, 'head' : true});
+        // ---
         /**
          * Signal that the mod is ready for export.
          */

@@ -4,5 +4,6 @@
             "fileMatch": ["/mod-manifest.json"],
             "url": "./spotfire/mod-schema.json"
         }
-    ]
+    ],
+    "liveServer.settings.port": 5502
 }
