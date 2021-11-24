@@ -1,7 +1,7 @@
 {
     "apiVersion": "1.2",
     "version": "1.0",
-    "name": "Bamboo Cross Table",
+    "name": "Bamboo Cross Table v2",
     "id": "js-cross-table",
     "icon": "icon.svg",
     "properties": [],
@@ -33,6 +33,8 @@
         "index.html",
         "main.css",
         "scroll.css",
-        "main.js"
+        "main.js",
+        "assets/tableHeadFixer.js",
+        "assets/jquery-2.1.3.js"
     ]
 }
