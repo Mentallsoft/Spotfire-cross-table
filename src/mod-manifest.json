@@ -1,7 +1,7 @@
 {
     "apiVersion": "1.2",
     "version": "1.0",
-    "name": "Bamboo Cross Table v2",
+    "name": "Custom Cross Table v2",
     "id": "js-cross-table",
     "icon": "icon.svg",
     "properties": [],
