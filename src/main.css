@@ -69,7 +69,8 @@ th::-webkit-resizer{
 
 #pivotTableContainer .category {
     background-color: white;
-    border-bottom: 1px solid whitesmoke;
+    border-bottom: 1px solid gainsboro;
+    border-right: 1px solid gainsboro;
 }
 
 .category, 
@@ -78,21 +79,23 @@ th::-webkit-resizer{
 }
 
 .category{
-    min-width: 200px;
+    min-width: 350px;
     background-color: red;
 }
 
 .subcategory {
     min-width: 350px;
-    border-right: 1px solid rgb(216, 216, 216);
+    border-right: 1px solid gainsboro;
 }
 
 .value {
     text-align: right;
-    min-width: 200px;
+    min-width: 160px;
 }
 
 td, th{
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    padding-right: 0.7rem;
+    padding-left: 0.7rem;
 }
